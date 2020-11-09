@@ -42,10 +42,6 @@ public class RedisConfig {
             throw new BusinessException(ResponseCodeEnum.SYSTEM_EXCEPTION.getCode(), "缺少 port");
         }
 
-        if (StringUtil.isEmpty(redisProperties.getPassword())) {
-            throw new BusinessException(ResponseCodeEnum.SYSTEM_EXCEPTION.getCode(), "缺少 password");
-        }
-
         if (ObjectUtil.isNull(redisProperties.getDatabase())) {
             throw new BusinessException(ResponseCodeEnum.SYSTEM_EXCEPTION.getCode(), "缺少 database");
         }
