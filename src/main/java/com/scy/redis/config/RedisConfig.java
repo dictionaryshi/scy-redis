@@ -6,10 +6,14 @@ import com.scy.core.enums.ResponseCodeEnum;
 import com.scy.core.exception.BusinessException;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.redis.properties.RedisProperties;
+import com.scy.redis.util.RedisUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * RedisConfig
@@ -27,6 +31,23 @@ public class RedisConfig {
         checkRedisProperties(redisProperties);
 
         return redisProperties;
+    }
+
+    @Bean
+    public JedisConnectionFactory jedisConnectionFactory(RedisProperties redisProperties) {
+        return RedisUtil.buildJedisConnectionFactory(redisProperties);
+    }
+
+    @Bean
+    public RedisTemplate<String, String> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+        redisTemplate.setStringSerializer(new StringRedisSerializer());
+        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+        return redisTemplate;
     }
 
     private void checkRedisProperties(RedisProperties redisProperties) {
