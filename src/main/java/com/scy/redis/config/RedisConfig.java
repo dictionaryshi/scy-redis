@@ -5,6 +5,7 @@ import com.scy.core.StringUtil;
 import com.scy.core.enums.ResponseCodeEnum;
 import com.scy.core.exception.BusinessException;
 import com.scy.core.spring.ApplicationContextUtil;
+import com.scy.redis.core.RedisTemplateUtil;
 import com.scy.redis.properties.RedisProperties;
 import com.scy.redis.util.RedisUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -78,5 +79,10 @@ public class RedisConfig {
         if (ObjectUtil.isNull(redisProperties.getMaxTotal())) {
             throw new BusinessException(ResponseCodeEnum.SYSTEM_EXCEPTION.getCode(), "缺少 maxTotal");
         }
+    }
+
+    @Bean
+    public RedisTemplateUtil<String, String> redisTemplateUtil(RedisTemplate<String, String> redisTemplate) {
+        return new RedisTemplateUtil<>(redisTemplate);
     }
 }
