@@ -5,6 +5,7 @@ import com.scy.core.StringUtil;
 import com.scy.core.enums.ResponseCodeEnum;
 import com.scy.core.exception.BusinessException;
 import com.scy.core.spring.ApplicationContextUtil;
+import com.scy.redis.core.HashOperationsUtil;
 import com.scy.redis.core.RedisTemplateUtil;
 import com.scy.redis.core.ValueOperationsUtil;
 import com.scy.redis.properties.RedisProperties;
@@ -90,5 +91,10 @@ public class RedisConfig {
     @Bean
     public ValueOperationsUtil<String, String> valueOperationsUtil(RedisTemplate<String, String> redisTemplate) {
         return new ValueOperationsUtil<>(redisTemplate);
+    }
+
+    @Bean
+    public HashOperationsUtil<String, String, String, Object> hashOperationsUtil(RedisTemplate<String, String> redisTemplate) {
+        return new HashOperationsUtil<>(redisTemplate);
     }
 }
