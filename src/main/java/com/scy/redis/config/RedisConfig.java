@@ -4,6 +4,7 @@ import com.scy.core.ObjectUtil;
 import com.scy.core.StringUtil;
 import com.scy.core.enums.ResponseCodeEnum;
 import com.scy.core.exception.BusinessException;
+import com.scy.core.json.JsonUtil;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.redis.core.HashOperationsUtil;
 import com.scy.redis.core.RedisTemplateUtil;
@@ -16,6 +17,7 @@ import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
@@ -47,7 +49,7 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer(JsonUtil.getBaseObjectMapper()));
         redisTemplate.setStringSerializer(new StringRedisSerializer());
         redisTemplate.setConnectionFactory(jedisConnectionFactory);
         return redisTemplate;
