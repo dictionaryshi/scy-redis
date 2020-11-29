@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * ListOperationsUtil
@@ -18,6 +19,11 @@ public class ListOperationsUtil<K, V> {
 
     public ListOperationsUtil(RedisTemplate<K, V> redisTemplate) {
         this.listOperations = redisTemplate.opsForList();
+    }
+
+    @Nullable
+    public List<V> range(K key, long start, long end) {
+        return listOperations.range(key, start, end);
     }
 
     @Nullable

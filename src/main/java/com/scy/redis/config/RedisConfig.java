@@ -6,10 +6,7 @@ import com.scy.core.enums.ResponseCodeEnum;
 import com.scy.core.exception.BusinessException;
 import com.scy.core.json.JsonUtil;
 import com.scy.core.spring.ApplicationContextUtil;
-import com.scy.redis.core.HashOperationsUtil;
-import com.scy.redis.core.ListOperationsUtil;
-import com.scy.redis.core.RedisTemplateUtil;
-import com.scy.redis.core.ValueOperationsUtil;
+import com.scy.redis.core.*;
 import com.scy.redis.properties.RedisProperties;
 import com.scy.redis.util.RedisUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -104,5 +101,10 @@ public class RedisConfig {
     @Bean
     public ListOperationsUtil<String, String> listOperationsUtil(RedisTemplate<String, String> redisTemplate) {
         return new ListOperationsUtil<>(redisTemplate);
+    }
+
+    @Bean
+    public SetOperationsUtil<String, String> setOperationsUtil(RedisTemplate<String, String> redisTemplate) {
+        return new SetOperationsUtil<>(redisTemplate);
     }
 }
