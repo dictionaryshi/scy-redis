@@ -7,6 +7,7 @@ import com.scy.core.exception.BusinessException;
 import com.scy.core.json.JsonUtil;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.redis.core.HashOperationsUtil;
+import com.scy.redis.core.ListOperationsUtil;
 import com.scy.redis.core.RedisTemplateUtil;
 import com.scy.redis.core.ValueOperationsUtil;
 import com.scy.redis.properties.RedisProperties;
@@ -98,5 +99,10 @@ public class RedisConfig {
     @Bean
     public HashOperationsUtil<String, String, String, Object> hashOperationsUtil(RedisTemplate<String, String> redisTemplate) {
         return new HashOperationsUtil<>(redisTemplate);
+    }
+
+    @Bean
+    public ListOperationsUtil<String, String> listOperationsUtil(RedisTemplate<String, String> redisTemplate) {
+        return new ListOperationsUtil<>(redisTemplate);
     }
 }
