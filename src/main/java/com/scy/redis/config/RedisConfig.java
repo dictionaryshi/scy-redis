@@ -107,4 +107,9 @@ public class RedisConfig {
     public SetOperationsUtil<String, String> setOperationsUtil(RedisTemplate<String, String> redisTemplate) {
         return new SetOperationsUtil<>(redisTemplate);
     }
+
+    @Bean
+    public ZSetOperationsUtil<String, String> zsetOperationsUtil(RedisTemplate<String, String> redisTemplate) {
+        return new ZSetOperationsUtil<>(redisTemplate);
+    }
 }
