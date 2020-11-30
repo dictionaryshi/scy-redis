@@ -1,5 +1,6 @@
 package com.scy.redis.util;
 
+import com.scy.core.StringUtil;
 import com.scy.redis.properties.RedisProperties;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
@@ -48,5 +49,9 @@ public class RedisUtil {
         JedisClientConfiguration jedisClientConfiguration = JedisClientConfiguration.builder()
                 .usePooling().poolConfig(jedisPoolConfig).build();
         return new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration);
+    }
+
+    public static String getRedisKey(String redisKey, String param) {
+        return StringUtil.join(StringUtil.COLON, redisKey, param);
     }
 }
