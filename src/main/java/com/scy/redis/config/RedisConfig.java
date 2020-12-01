@@ -7,6 +7,7 @@ import com.scy.core.exception.BusinessException;
 import com.scy.core.json.JsonUtil;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.redis.core.*;
+import com.scy.redis.lock.RedisLock;
 import com.scy.redis.properties.RedisProperties;
 import com.scy.redis.util.RedisUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -111,5 +112,10 @@ public class RedisConfig {
     @Bean
     public ZSetOperationsUtil<String, String> zsetOperationsUtil(RedisTemplate<String, String> redisTemplate) {
         return new ZSetOperationsUtil<>(redisTemplate);
+    }
+
+    @Bean
+    public RedisLock redisLock(RedisTemplate<String, String> redisTemplate) {
+        return new RedisLock(redisTemplate);
     }
 }
