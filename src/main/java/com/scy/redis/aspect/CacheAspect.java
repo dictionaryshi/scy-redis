@@ -1,6 +1,7 @@
 package com.scy.redis.aspect;
 
 import com.scy.core.CollectionUtil;
+import com.scy.core.ObjectUtil;
 import com.scy.core.ParamUtil;
 import com.scy.core.json.JsonUtil;
 import com.scy.core.model.JoinPointBO;
@@ -52,7 +53,7 @@ public class CacheAspect {
     private String buildRedisKey(JoinPointBO joinPointBO, Cache cache) {
         Map<String, Object> params = CollectionUtil.newHashMap();
         joinPointBO.getParams().forEach((paramName, paramValue) -> {
-            if (!ParamUtil.isBasicParam(paramValue.getClass())) {
+            if (ObjectUtil.isNull(paramValue) || !ParamUtil.isBasicParam(paramValue.getClass())) {
                 return;
             }
             params.put(paramName, paramValue);
