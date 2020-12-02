@@ -6,6 +6,7 @@ import com.scy.core.enums.ResponseCodeEnum;
 import com.scy.core.exception.BusinessException;
 import com.scy.core.json.JsonUtil;
 import com.scy.core.spring.ApplicationContextUtil;
+import com.scy.redis.aspect.CacheAspect;
 import com.scy.redis.core.*;
 import com.scy.redis.lock.RedisLock;
 import com.scy.redis.properties.RedisProperties;
@@ -117,5 +118,10 @@ public class RedisConfig {
     @Bean
     public RedisLock redisLock(RedisTemplate<String, String> redisTemplate) {
         return new RedisLock(redisTemplate);
+    }
+
+    @Bean
+    public CacheAspect cacheAspect(ValueOperationsUtil<String, String> valueOperationsUtil, RedisLock redisLock) {
+        return new CacheAspect(valueOperationsUtil, redisLock);
     }
 }
