@@ -3,6 +3,7 @@ package com.scy.redis.aspect;
 import com.scy.core.CollectionUtil;
 import com.scy.core.ObjectUtil;
 import com.scy.core.ParamUtil;
+import com.scy.core.format.MessageUtil;
 import com.scy.core.json.JsonUtil;
 import com.scy.core.model.JoinPointBO;
 import com.scy.core.spring.JoinPointUtil;
@@ -17,6 +18,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.core.annotation.Order;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * CacheAspect
@@ -48,6 +50,38 @@ public class CacheAspect {
         JoinPointBO joinPointBO = JoinPointUtil.getJoinPointBO(proceedingJoinPoint);
 
         String redisKey = buildRedisKey(joinPointBO, cache);
+
+        Object result = getResultFromCache(redisKey, joinPointBO);
+        if (!ObjectUtil.isNull(result)) {
+            log.info(MessageUtil.format("缓存命中", "redisKey", redisKey, "result", result));
+            return result;
+        }
+
+        String lockKey = redisKey + "_lock";
+        try {
+            redisLock.lock(lockKey);
+
+            result = getResultFromCache(redisKey, joinPointBO);
+            if (!ObjectUtil.isNull(result)) {
+                log.info(MessageUtil.format("缓存命中", "redisKey", redisKey, "result", result));
+                return result;
+            }
+
+            result = proceedingJoinPoint.proceed();
+            valueOperationsUtil.setIfAbsent(redisKey, JsonUtil.object2Json(result), cache.timeout(), TimeUnit.MILLISECONDS);
+            return result;
+        } finally {
+            redisLock.unlock(lockKey);
+        }
+    }
+
+    private Object getResultFromCache(String redisKey, JoinPointBO joinPointBO) {
+        String json = valueOperationsUtil.get(redisKey);
+        if (ObjectUtil.isNull(json)) {
+            return null;
+        }
+
+        return JsonUtil.json2Object(json, joinPointBO.getMethod());
     }
 
     private String buildRedisKey(JoinPointBO joinPointBO, Cache cache) {
@@ -58,6 +92,6 @@ public class CacheAspect {
             }
             params.put(paramName, paramValue);
         });
-        return RedisUtil.getRedisKey(cache.redisKey(), JsonUtil.object2Json(params));
+        return RedisUtil.getRedisKey(cache.redisKey(), params.toString());
     }
 }
