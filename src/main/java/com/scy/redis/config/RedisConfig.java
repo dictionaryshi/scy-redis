@@ -7,6 +7,7 @@ import com.scy.core.exception.BusinessException;
 import com.scy.core.json.JsonUtil;
 import com.scy.core.spring.ApplicationContextUtil;
 import com.scy.redis.aspect.CacheAspect;
+import com.scy.redis.aspect.LimitAccessFrequencyAspect;
 import com.scy.redis.core.*;
 import com.scy.redis.lock.RedisLock;
 import com.scy.redis.properties.RedisProperties;
@@ -123,5 +124,10 @@ public class RedisConfig {
     @Bean
     public CacheAspect cacheAspect(ValueOperationsUtil<String, String> valueOperationsUtil, RedisLock redisLock) {
         return new CacheAspect(valueOperationsUtil, redisLock);
+    }
+
+    @Bean
+    public LimitAccessFrequencyAspect limitAccessFrequencyAspect(RedisTemplateUtil<String, String> redisTemplateUtil) {
+        return new LimitAccessFrequencyAspect(redisTemplateUtil);
     }
 }
