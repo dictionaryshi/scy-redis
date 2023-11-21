@@ -7,6 +7,8 @@ import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.time.Duration;
+
 /**
  * RedisUtil
  *
@@ -24,9 +26,9 @@ public class RedisUtil {
         // 资源池确保的最少空闲连接数
         jedisPoolConfig.setMinIdle(redisProperties.getMinIdle());
         // 当资源池连接用尽后, 调用者的最大等待时间
-        jedisPoolConfig.setMaxWaitMillis(10_000);
+        jedisPoolConfig.setMaxWait(Duration.ofMillis(10_000));
         // 资源池中资源的最小空闲时间
-        jedisPoolConfig.setMinEvictableIdleTimeMillis(300_000L);
+        jedisPoolConfig.setMinEvictableIdleTime(Duration.ofMillis(300_000L));
         // 向资源池借用连接时是否做连接有效性检测
         jedisPoolConfig.setTestOnBorrow(Boolean.FALSE);
         // 向资源池归还连接时是否做连接有效性检测
@@ -34,7 +36,7 @@ public class RedisUtil {
         // 是否开启空闲资源检测
         jedisPoolConfig.setTestWhileIdle(Boolean.TRUE);
         // 空闲资源的检测周期
-        jedisPoolConfig.setTimeBetweenEvictionRunsMillis(60_000L);
+        jedisPoolConfig.setTimeBetweenEvictionRuns(Duration.ofMillis(60_000L));
         return jedisPoolConfig;
     }
 
